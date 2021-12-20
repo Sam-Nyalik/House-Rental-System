@@ -1,9 +1,10 @@
 <?php
+// Start session
+session_start();
 
-// Destroy all sessions
-$_SESSION = array();
-
-session_destroy();
+// Unset all session variables
+unset($_session['id']);
+unset($_SESSION['admin_loggedIn']);
 
 // Redirect admin to the login page
 header("location: index.php?page=admin/account/login");
