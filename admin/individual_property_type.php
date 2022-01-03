@@ -14,11 +14,6 @@ include_once "./admin/admin_includes/check_login.inc.php";
 include_once "functions/functions.php";
 $pdo = databaseConnect();
 
-$id = false;
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-}
-
 // Define variables and assign them empty values
 $propertyType = $success = "";
 $propertyType_error = $error = "";
@@ -55,13 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Check for errors before dealing with the database
     if (empty($propertyType_error)) {
         // Prepare an UPDATE statement
-        $sql = "UPDATE property_type SET name = :propertyType WHERE id = '$id'";
+        $sql = "UPDATE property_type SET name = :propertyType WHERE id = :id";
 
         if ($stmt = $pdo->prepare($sql)) {
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(":propertyType", $param_propertyType, PDO::PARAM_STR);
+            $stmt->bindParam(":id", $param_id, PDO::PARAM_INT);
             // Set parameters
             $param_propertyType = $propertyType;
+            $param_id = $_GET['id'];
             // Attempt to execute
             if ($stmt->execute()) {
                 $success = "Property Type name has been updated successfully!";
@@ -86,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Fetch property type from the database with the ID in the URL -->
     <?php
-    $sql = $pdo->prepare("SELECT * FROM property_type WHERE id = '$id'");
+    $sql = $pdo->prepare("SELECT * FROM property_type WHERE id = '" . $_GET['id'] . "'");
     $sql->execute();
     $database_property_type = $sql->fetchAll(PDO::FETCH_ASSOC);
     ?>
