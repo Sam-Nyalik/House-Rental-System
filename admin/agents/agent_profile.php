@@ -62,10 +62,6 @@ $pdo = databaseConnect();
                                 <hr>
                                 <h4><span class="title"><b>Rate Card: </b></span>Ksh. <?= $agent_profile['rateCard']; ?></h4>
                             </div>
-                            <!-- <div class="p-4">
-                                <h3>Contact</h3>
-                                <p>+<?= $agent_profile['phoneNumber']; ?></p>
-                            </div> -->
                         </div>
                     </div>
                 <?php endforeach; ?>
