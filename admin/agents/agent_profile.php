@@ -51,8 +51,8 @@ $pdo = databaseConnect();
                     </div>
                     <div class="col-md-8 col-lg-8">
                         <div class="d-flex flex-column">
-                            <div class="data bg-dark text-white">
-                                <h3><span class="title"><b>Name: </b></span><?= $agent_profile['prefix']; ?> <?= $agent_profile['firstName']; ?> <?= $agent_profile['lastName']; ?></h3>
+                            <div class="data text-dark">
+                                <h4><span class="title"><b>Name: </b></span><?= $agent_profile['prefix']; ?> <?= $agent_profile['firstName']; ?> <?= $agent_profile['lastName']; ?></h4>
                                 <hr>
                                 <h4><span class="title"><b>Email Address: </b></span><?= $agent_profile['emailAddress']; ?></h4>
                                 <hr>
