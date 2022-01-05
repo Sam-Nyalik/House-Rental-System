@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
 ?>
 
 <!-- Header Template -->
@@ -174,9 +175,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <tr>
                                             <td><?php echo $count++; ?></td>
                                             <td><?= $property_type['name']; ?></td>
-                                            <td><?=$property_type['dateAdded']; ?></td>
-                                            <td class="text-center">
-                                                <a href="index.php?page=admin/individual_property_type&id=<?=$property_type['id'];?>"><i class="bi bi-eye"></i></a>
+                                            <td><?= $property_type['dateAdded']; ?></td>
+                                            <td>
+                                                <a href="index.php?page=admin/individual_property_type&id=<?= $property_type['id']; ?>"><i class="bi bi-eye"></i></a> | <a href="index.php?page=admin/delete_property_type&id=<?= $property_type['id']; ?>" onclick="return confirm('Are you sure you want to delete <?= $property_type['name']; ?> as a property type?')"><i class="bi bi-trash text-danger"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
