@@ -15,8 +15,8 @@ include_once "functions/functions.php";
 $pdo = databaseConnect();
 
 // Define variables and assign them empty values
-$companyName = $success = "";
-$companyName_error = $error = "";
+$companyName = $success = $email = "";
+$companyName_error = $email_error = $error = "";
 
 // Process user input when the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -27,16 +27,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $companyName = trim($_POST['companyName']);
     }
 
+    // Validate Company Email
+    if (empty(trim($_POST['email']))) {
+        $email_error = "Field is required!";
+    } else {
+        $email = trim($_POST['email']);
+    }
+
     // Check for errors before dealing with the database
-    if (empty($companyName_error)) {
+    if (empty($companyName_error) && empty($email_error)) {
         // Prepare an INSERT statement
-        $sql = "UPDATE company_details SET companyName = :companyName WHERE id = 1";
+        $sql = "UPDATE company_details SET companyName = :companyName, companyEmail = :companyEmail WHERE id = 1";
 
         if ($stmt = $pdo->prepare($sql)) {
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(":companyName", $param_companyName, PDO::PARAM_STR);
+            $stmt->bindParam(":companyEmail", $param_companyEmail, PDO::PARAM_STR);
             // Set parameters
             $param_companyName = $companyName;
+            $param_companyEmail = $email;
             // Attempt to execute
             if ($stmt->execute()) {
                 $success = "Company Profile has been updated successfully!";
@@ -55,103 +64,127 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!-- Header Template -->
 <?= header_template('ADMIN | COMPANY_DETAILS'); ?>
 
-<!-- Main Admin Navbar -->
-<?php include_once "./admin/admin_includes/admin_navbar.inc.php"; ?>
+<div id="body">
+    <!-- Main Admin Navbar -->
+    <?php include_once "./admin/admin_includes/admin_navbar.inc.php"; ?>
 
-<!-- Page Title & Breadcrumb -->
-<div class="container-fluid">
-    <div class="page_title">
-        <div class="row">
-            <h5>Admin Company Details</h5>
+    <!-- Page Title & Breadcrumb -->
+    <div class="container-fluid">
+        <div class="page_title">
+            <div class="row">
+                <h5>Admin Company Details</h5>
 
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.php?page=admin/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Company Details</li>
-                </ol>
-            </nav>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.php?page=admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Company Details</li>
+                    </ol>
+                </nav>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Company Details -->
-<div class="container-fluid">
-    <div id="profile">
-        <div class="row">
-            <!-- Fetch the company details from the database -->
-            <?php
-            $sql = $pdo->prepare("SELECT * FROM company_details WHERE id = 1");
-            $sql->execute();
-            $database_company_details = $sql->fetchAll(PDO::FETCH_ASSOC);
-            ?>
-            <?php foreach ($database_company_details as $companyDetails) : ?>
-                <div class="col-md-6">
-                    <div class="profile_side1">
-                        <div class="title">
-                            <h5><i class="bi bi-building"></i> Update Company Profile</h5>
-                            <hr>
-                        </div>
-
-                        <form action="index.php?page=admin/company/company_details" method="post" class="profile_edit">
-                            <!-- Success Message -->
-                            <div class="form-group">
-                                <span class="errors text-success">
-                                    <?php
-                                    if ($success) {
-                                        echo $success;
-                                    }
-                                    ?>
-                                </span>
+    <!-- Company Details -->
+    <div class="container-fluid">
+        <div id="profile">
+            <div class="row">
+                <!-- Fetch the company details from the database -->
+                <?php
+                $sql = $pdo->prepare("SELECT * FROM company_details WHERE id = 1");
+                $sql->execute();
+                $database_company_details = $sql->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                <?php foreach ($database_company_details as $companyDetails) : ?>
+                    <div class="col-md-6">
+                        <div class="profile_side1">
+                            <div class="title">
+                                <h5><i class="bi bi-building"></i> Update Company Profile</h5>
+                                <hr>
                             </div>
 
-                            <!-- Error Message -->
-                            <div class="form-group">
-                                <span class="errors text-danger">
-                                    <?php
-                                    if ($error) {
-                                        echo $error;
-                                    }
-                                    ?>
-                                </span>
-                            </div>
+                            <form action="index.php?page=admin/company/company_details" method="post" class="profile_edit">
+                                <!-- Success Message -->
+                                <div class="form-group">
+                                    <span class="errors text-success">
+                                        <?php
+                                        if ($success) {
+                                            echo $success;
+                                        }
+                                        ?>
+                                    </span>
+                                </div>
 
-                            <!-- Company Name -->
-                            <div class="form-group">
-                                <label for="CompanyName">Company Name</label>
-                                <input type="text" name="companyName" value="<?= $companyDetails['companyName']; ?>" class="form-control 
+                                <!-- Error Message -->
+                                <div class="form-group">
+                                    <span class="errors text-danger">
+                                        <?php
+                                        if ($error) {
+                                            echo $error;
+                                        }
+                                        ?>
+                                    </span>
+                                </div>
+
+                                <!-- Company Name -->
+                                <div class="form-group">
+                                    <label for="CompanyName">Company Name</label>
+                                    <input type="text" name="companyName" value="<?= $companyDetails['companyName']; ?>" class="form-control 
                             <?php echo (!empty($companyName_error)) ? 'is-invalid' : ''; ?>">
-                                <span class="errors text-danger"><?php echo $companyName_error; ?></span>
-                            </div>
+                                    <span class="errors text-danger"><?php echo $companyName_error; ?></span>
+                                </div>
 
-                            <!-- Submit Btn -->
-                            <div class="form-group my-3">
-                                <input type="submit" value="UPDATE COMPANY DETAILS" class="btn w-100">
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                                <!-- Company Email -->
+                                <div class="form-group">
+                                    <label for="CompanyEmail">Company Email</label>
+                                    <input type="email" name="email" value="<?= $companyDetails['companyEmail']; ?>" class="form-control 
+                                    <?php echo (!empty($email_error)) ? 'is-invalid' : ''; ?>">
+                                    <span class="errors text-danger"><?php echo $email_error; ?></span>
+                                </div>
 
-                <div class="col-md-6">
-                    <div class="profile_side1">
-                        <div class="title">
-                            <h5><i class="bi bi-building"></i> Company Profile</h5>
-                            <hr>
+                                <!-- Submit Btn -->
+                                <div class="form-group my-3">
+                                    <input type="submit" value="UPDATE COMPANY DETAILS" class="btn w-100">
+                                </div>
+                            </form>
                         </div>
-
-                        <form class="profile_edit">
-                            <div class="form-group">
-                                <label for="Name Of Company">Name of Company</label>
-                                <span class="profile_details">
-                                    <h5><?= $companyDetails['companyName']; ?></h5>
-                                </span>
-                            </div>
-                        </form>
                     </div>
-                </div>
-            <?php endforeach; ?>
+
+                    <div class="col-md-6">
+                        <div class="profile_side1">
+                            <div class="title">
+                                <h5><i class="bi bi-building"></i> Company Profile</h5>
+                                <hr>
+                            </div>
+
+                            <form class="profile_edit">
+                                <div class="form-group">
+                                    <label for="Name Of Company">Name of Company</label>
+                                    <span class="profile_details">
+                                        <p><?= $companyDetails['companyName']; ?></p>
+                                    </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Company Email">Company Email</label>
+                                    <span class="profile_details">
+                                        <p><?= $companyDetails['companyEmail']; ?></p>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- 
+<div class="container">
+    <div class="row">
+        <h3 class="text-center"><a href="index.php?page=admin/company/addCompanyDetails">Add company Details</a></h3>
+    </div>
+</div> -->
 
 <!-- Footer Template -->
 <?= footer_template(); ?>
