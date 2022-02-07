@@ -19,8 +19,8 @@ include_once "functions/functions.php";
 $pdo = databaseConnect();
 
 // Define variables and assign them empty values
-$prefix = $firstName = $lastName = $success = "";
-$prefix_error = $firstName_error = $lastName_error = $error = "";
+$prefix = $firstName = $lastName = $email = $success = "";
+$prefix_error = $firstName_error = $lastName_error = $email_error = $error = "";
 
 // Process user input when the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -57,21 +57,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $lastName = trim($_POST['lastName']);
     }
 
+    // Validate Email Address
+    if (empty(trim($_POST['email']))) {
+        $email_error = "Field is required!";
+    } else {
+        $email = trim($_POST['email']);
+    }
+
     // Check for errors before dealing with the database
-    if (empty($prefix_error) && empty($firstName_error) && empty($lastName_error)) {
+    if (empty($prefix_error) && empty($firstName_error) && empty($lastName_error) && empty($email_error)) {
         // Prepare an UPDATE statement
-        $sql = "UPDATE admin SET firstName = :firstName, lastName = :lastName, prefix = :prefix WHERE id = :id";
+        $sql = "UPDATE admin SET firstName = :firstName, lastName = :lastName, emailAddress = :emailAddress, prefix = :prefix WHERE id = :id";
 
         if ($stmt = $pdo->prepare($sql)) {
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(":firstName", $param_firstName, PDO::PARAM_STR);
             $stmt->bindParam(":lastName", $param_lastName, PDO::PARAM_STR);
+            $stmt->bindParam(":emailAddress", $param_emailAddress, PDO::PARAM_STR);
             $stmt->bindParam(":prefix", $param_prefix, PDO::PARAM_STR);
             $stmt->bindParam(":id", $param_id, PDO::PARAM_INT);
 
             // Set parameters
             $param_firstName = $firstName;
             $param_lastName = $lastName;
+            $param_emailAddress = $email;
             $param_prefix = $prefix;
             $param_id = $_SESSION['id'];
 
@@ -184,6 +193,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
 
+                            <!-- Email Address -->
+                            <div class="form-group">
+                                <label for="emailAddress">Email Address</label>
+                                <input type="email" name="email" value="<?= $admin_details['emailAddress']; ?>" class="form-control 
+                                <?php echo (!empty($email_error)) ? 'is-invalid' : ''; ?>">
+                                <span class="errors text-danger"><?php echo $email_error; ?></span>
+                            </div>
+
                             <!-- Submit Btn -->
                             <div class="form-group my-3">
                                 <input type="submit" class="btn btn-warning text-light w-100" value="Update Profile">
@@ -198,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="col-md-6">
                 <div class="profile_side1">
                     <div class="title">
-                        <h5><i class="bi bi-person"></i> Profile</h5>
+                        <h5><i class="bi bi-person"></i> Admin Profile</h5>
                         <hr>
                     </div>
                     <img src="<?= $admin_details['profileImage']; ?>" alt="<?= $admin_details['firstName']; ?>" class="img-fluid profileImage">
