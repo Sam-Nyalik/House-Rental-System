@@ -178,13 +178,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?= header_template('AGENT | REGISTER'); ?>
 
 <!-- TopBar Script -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="register-topbar"></div>
-        </div>
-    </div>
-</div>
+<?php include_once "includes/loginTopBar.inc.php" ?>
+
 
 <!-- Back Link -->
 <div class="back_link">
