@@ -1,5 +1,9 @@
 <?php
 
+// Error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 // Start session
 session_start();
 
@@ -69,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty(trim($_POST['numberOfKitchens']))) {
         $numberOfKitchens_error = "Field is required!";
     } else {
-        $numberOfKitchens = trim($_POST['numberOfkitchens']);
+        $numberOfKitchens = trim($_POST['numberOfKitchens']);
     }
 
     // Validate Number Of Bathrooms
@@ -136,12 +140,122 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Check for errors before dealing with the database
-    if(empty($propertyType_error) && empty($propertySize_error) && empty($propertyLocation_error) && empty($propertyAddress_error) && empty($propertyName_error) && empty($propertyPrice_error) && empty($numberOfRooms_error) && empty($numberOfKitchens_error) && empty($numberOfBathrooms_error) && empty($propertyWaterSource_error) && empty($propertyTotalNumber_error) && empty($propertyAvailability_error) && empty($propertyCategory_error)){
+    if (empty($propertyType_error) && empty($propertySize_error) && empty($propertyLocation_error) && empty($propertyAddress_error) && empty($propertyName_error) && empty($propertyPrice_error) && empty($numberOfRooms_error) && empty($numberOfKitchens_error) && empty($numberOfBathrooms_error) && empty($propertyWaterSource_error) && empty($propertyTotalNumber_error) && empty($propertyAvailability_error) && empty($propertyCategory_error)) {
         // Process Property Image 1
-        if(!empty($_FILES['propertyImage1'])){
-            move_uploaded_file($_FILES['propertyImage1']['tmp_name'], "./");
-        }
+        if (!empty($_FILES['propertyImage1']['name'])) {
+            move_uploaded_file($_FILES['propertyImage1']['tmp_name'], "propertyImages/" . $_FILES['propertyImage1']['name']);
+            $propertyImage1 = "propertyImages/" . $_FILES['propertyImage1']['name'];
 
+            // Process Property Image 2
+            if (!empty($_FILES['propertyImage2']['name'])) {
+                move_uploaded_file($_FILES['propertyImage2']['tmp_name'], "propertyImages/" . $_FILES['propertyImage2']['name']);
+                $propertyImage2 = "propertyImages/" . $_FILES['propertyImage2']['name'];
+
+                // Process Property Image 3
+                if (!empty($_FILES['propertyImage3']['name'])) {
+                    move_uploaded_file($_FILES['propertyImage3']['tmp_name'], "propertyImages/" . $_FILES['propertyImage3']['name']);
+                    $propertyImage3 = "propertyImages/" . $_FILES['propertyImage3']['name'];
+
+                    // Process Property Image 4
+                    if (!empty($_FILES['propertyImage4']['name'])) {
+                        move_uploaded_file($_FILES['propertyImage4']['tmp_name'], "propertyImages/" . $_FILES['propertyImage4']['name']);
+                        $propertyImage4 = "propertyImages/" . $_FILES['propertyImage4']['name'];
+
+                        // Process Property Image 5
+                        if (!empty($_FILES['propertyImage5']['name'])) {
+                            move_uploaded_file($_FILES['propertyImage5']['tmp_name'], "propertyImages/" . $_FILES['propertyImage5']['name']);
+                            $propertyImage5 = "propertyImages/" . $_FILES['propertyImage5']['name'];
+
+                            // Process Property Image 6
+                            if (!empty($_FILES['propertyImage6']['name'])) {
+                                move_uploaded_file($_FILES['propertyImage6']['tmp_name'], "propertyImages/" . $_FILES['propertyImage6']['name']);
+                                $propertyImage6 = "propertyImages/" . $_FILES['propertyImage6']['name'];
+
+                                if (!empty($_FILES['agentProfileImage']['name'])) {
+                                    move_uploaded_file($_FILES['agentProfileImage']['tmp_name'], "agentProfileImages/" . $_FILES['agentProfileImage']['name']);
+                                    $agentProfileImage = "agentProfileImages/" . $_FILES['agentProfileImage']['name'];
+
+                                    // Prepare an INSERT statement
+                                    $sql = "INSERT INTO all_properties(propertyType, propertySize, propertyLocation, propertyAddress, propertyName, propertyPrice, numberOfRooms, numberOfKitchens, numberOfBathrooms, propertyWaterSource, propertyTotalNumber, propertyAvailability, propertyImage1, propertyImage2, propertyImage3, propertyImage4, propertyImage5, propertyImage6, propertyCategory, agent_name, agent_prefix, agent_emailAddress, agent_profileImage) 
+                                VALUES(:propertyType, :propertySize, :propertyLocation, :propertyAddress, :propertyName, :propertyPrice, :numberOfRooms, :numberOfKitchens, :numberOfBathrooms, :propertyWaterSource, :propertyTotalNumber, :propertyAvailability, :propertyImage1, :propertyImage2, :propertyImage3, :propertyImage4, :propertyImage5, :propertyImage6, :propertyCategory, :agent_name, :agent_prefix, :agent_emailAddress, :agent_profileImage)";
+
+                                    if ($stmt = $pdo->prepare($sql)) {
+                                        // Bind variables to the prepared statement as parameters
+                                        $stmt->bindParam(":propertyType", $param_propertyType, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertySize", $param_propertySize, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyLocation", $param_propertyLocation, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyAddress", $param_propertyAddress, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyName", $param_propertyName, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyPrice", $param_propertyPrice, PDO::PARAM_STR);
+                                        $stmt->bindParam(":numberOfRooms", $param_numberOfRooms, PDO::PARAM_STR);
+                                        $stmt->bindParam(":numberOfKitchens", $param_numberOfKitchens, PDO::PARAM_STR);
+                                        $stmt->bindParam(":numberOfBathrooms", $param_numberOfBathrooms, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyWaterSource", $param_propertyWaterSource, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyTotalNumber", $param_propertyTotalNumber, PDO::PARAM_INT);
+                                        $stmt->bindParam(":propertyAvailability", $param_propertyAvailability, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyImage1", $param_propertyImage1, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyImage2", $param_propertyImage2, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyImage3", $param_propertyImage3, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyImage4", $param_propertyImage4, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyImage5", $param_propertyImage5, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyImage6", $param_propertyImage6, PDO::PARAM_STR);
+                                        $stmt->bindParam(":propertyCategory", $param_propertyCategory, PDO::PARAM_STR);
+                                        $stmt->bindParam(":agent_name", $param_agentName, PDO::PARAM_STR);
+                                        $stmt->bindParam(":agent_prefix", $param_agentPrefix, PDO::PARAM_STR);
+                                        $stmt->bindParam(":agent_emailAddress", $param_agentEmailAddress, PDO::PARAM_STR);
+                                        $stmt->bindParam(":agent_profileImage", $param_agentProfileImage, PDO::PARAM_STR);
+
+                                        // Set parameters
+                                        $param_propertyType = $propertyType;
+                                        $param_propertySize = $propertySize;
+                                        $param_propertyLocation = $propertyLocation;
+                                        $param_propertyAddress = $propertyAddress;
+                                        $param_propertyName = $propertyName;
+                                        $param_propertyPrice = $propertyPrice;
+                                        $param_numberOfRooms = $numberOfRooms;
+                                        $param_numberOfKitchens = $numberOfKitchens;
+                                        $param_numberOfBathrooms = $numberOfBathrooms;
+                                        $param_propertyWaterSource = $propertyWaterSource;
+                                        $param_propertyTotalNumber = $propertyTotalNumber;
+                                        $param_propertyAvailability = $propertyAvailability;
+                                        $param_propertyImage1 = $propertyImage1;
+                                        $param_propertyImage2 = $propertyImage2;
+                                        $param_propertyImage3 = $propertyImage3;
+                                        $param_propertyImage4 = $propertyImage4;
+                                        $param_propertyImage5 = $propertyImage5;
+                                        $param_propertyImage6 = $propertyImage6;
+                                        $param_propertyCategory = $propertyCategory;
+                                        $param_agentName = $agentFullName;
+                                        $param_agentPrefix = $agentPrefix;
+                                        $param_agentEmailAddress = $agentEmailAddress;
+                                        $param_agentProfileImage = $agentProfileImage;
+
+                                        // Attempt to execute
+                                        if ($stmt->execute()) {
+                                            $success = "Property has been inserted successfully!";
+                                        } else {
+                                            $error = "There was an error. Please try again!";
+                                        }
+                                    }
+                                }
+                            } else {
+                                $propertyImage6_error = "Field is required!";
+                            }
+                        } else {
+                            $propertyImage5_error = "Field is required!";
+                        }
+                    } else {
+                        $propertyImage4_error = "Field is required";
+                    }
+                } else {
+                    $propertyImage3_error = "Field is required!";
+                }
+            } else {
+                $propertyImage2_error = "Field is required!";
+            }
+        } else {
+            $propertyImage1_error = "Field is required!";
+        }
     }
 }
 
@@ -187,6 +301,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $sql->execute();
                                 $database_property_types = $sql->fetchAll(PDO::FETCH_ASSOC);
                                 ?>
+
+                                <!-- Errors and Success Message -->
+                                <div class="form-group">
+                                    <p class="errors text-success"><?php
+                                                                    if ($success) {
+                                                                        echo $success;
+                                                                    }
+                                                                    ?></p>
+                                    <p class="errors text-danger"><?php
+                                                                    if ($error) {
+                                                                        echo $error;
+                                                                    }
+                                                                    ?></p>
+                                </div>
+
                                 <div class="row">
                                     <!-- Propert Type -->
                                     <div class="col-6">
@@ -206,7 +335,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="PropertySize">Property Size</label>
-                                            <input type="text" name="propertySize" class="form-control 
+                                            <input type="text" name="propertySize" value="<?php echo $propertySize; ?>" class="form-control 
                                             <?php echo (!empty($propertySize_error)) ? 'is-invalid' : ''; ?>">
                                             <span class="errors text-danger"><?php echo $propertySize_error ?></span>
                                         </div>
@@ -218,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="PropertyLocation">Property Location</label>
-                                            <input type="text" name="propertyLocation" class="form-control 
+                                            <input type="text" name="propertyLocation" value="<?php echo $propertyLocation; ?>" class="form-control 
                                             <?php echo (!empty($propertyLocation_error)) ? 'is-invalid' : ''; ?>">
                                             <span class="errors text-danger"><?php echo $propertyLocation_error; ?></span>
                                         </div>
@@ -228,7 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="propertyAddress">Property Address</label>
-                                            <input type="text" name="propertyAddress" class="form-control 
+                                            <input type="text" name="propertyAddress" value="<?php echo $propertyAddress; ?>" class="form-control 
                                             <?php echo (!empty($propertyAddress_error)) ? 'is-invalid' : ''; ?>">
                                             <span class="errors text-danger"><?php echo $propertyAddress_error; ?></span>
                                         </div>
@@ -240,7 +369,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="propertyName">Property Name</label>
-                                            <input type="text" name="propertyName" class="form-control 
+                                            <input type="text" name="propertyName" value="<?php echo $propertyName; ?>" class="form-control 
                                         <?php echo (!empty($propertyName_error)) ? 'is-invalid' : ''; ?>">
                                             <span class="errors text-danger"><?php echo $propertyName_error; ?></span>
                                         </div>
@@ -250,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="propertyPrice">Property Price <span>( <small>in Ksh.</small><span class="text-danger">* </span></span>)</label>
-                                            <input type="text" name="propertyPrice" class="form-control 
+                                            <input type="text" name="propertyPrice" value="<?php echo $propertyPrice; ?>" class="form-control 
                                             <?php echo (!empty($propertyPrice_error)) ? 'is-invalid' : ''; ?>">
                                             <span class="errors text-danger"><?php echo $propertyPrice_error; ?></span>
                                         </div>
@@ -262,8 +391,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="NumberOfRooms">Number Of Rooms</label>
-                                            <input type="text" name="numberOfRooms" class="form-control 
-                                        <?php echo (!empty($numberOfRooms_error)) ? 'is-invalid' : ''; ?>">
+                                            <select name="numberOfRooms" class="form-control <?php echo (!empty($numberOfRooms_error)) ? 'is-invalid' : ''; ?>">
+                                                <option value="Select Number Of rooms" disabled>Select Number Of Rooms</option>
+                                                <option value="Studio Apartment">Studio Apartment</option>
+                                                <option value="1 Bedroom">1 Bedroom</option>
+                                                <option value="2 Bedroom">2 Bedrooms</option>
+                                                <option value="3 Bedrooms">3 Bedrooms</option>
+                                                <option value="4 Bedrooms">4 Bedrooms</option>
+                                                <option value="5 bedrroms and above">5 Bedrooms and above</option>
+                                            </select>
                                             <span class="errors text-danger"><?php echo $numberOfRooms_error; ?></span>
                                         </div>
                                     </div>
@@ -272,8 +408,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="numberOfKitchens">Number Of Kitchens</label>
-                                            <input type="text" name="numberOfKitchens" class="form-control 
-                                            <?php echo (!empty($numberOfKitchens_error)) ? 'is-invalid' : ''; ?>">
+                                            <select name="numberOfKitchens" class="form-control <?php echo (!empty($numberOfKitchens_error) ? 'is-invalid' : '') ?>">
+                                                <option value="Select Number" disabled>Select Number</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                                <option value="4">Four</option>
+                                                <option value="5 and above">Five and above</option>
+                                            </select>
                                             <span class="errors text-danger"><?php echo $numberOfKitchens_error; ?></span>
                                         </div>
                                     </div>
@@ -284,8 +426,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="NumberOfBathrooms">Number Of Bathrooms</label>
-                                            <input type="text" name="numberOfBathrooms" class="form-control 
-                                        <?php echo (!empty($numberOfBathrooms_error)) ? 'is-invalid' : ''; ?>">
+                                            <select name="numberOfBathrooms" class="form-control">
+                                                <option value="Select Number Of Bathrooms" disabled>Select Number Of Bathrooms</option>
+                                                <option value="All Ensuite">All Ensuite</option>
+                                                <option value="1 Bathroom">1 Bathroom</option>
+                                                <option value="2 Bathrooms">2 Bathrooms</option>
+                                                <option value="3 Bathrooms">3 Bathrooms</option>
+                                                <option value="4 Bathrooms">4 Bathrooms</option>
+                                                <option value="5 Bathrooms and above">5 Bathrooms and above</option>
+                                            </select>
                                             <span class="errors text-danger"><?php echo $numberOfBathrooms_error; ?></span>
                                         </div>
                                     </div>
@@ -294,8 +443,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="PropertyWaterSource">Property Water Source</label>
-                                            <input type="text" name="propertyWaterSource" class="form-control 
-                                            <?php echo (!empty($propertyWaterSource_error)) ? 'is-invalid' : ''; ?>">
+                                            <select name="propertyWaterSource" class="form-control">
+                                                <option value="Select Property Water Source" disabled>Select Property Water Source</option>
+                                                <option value="Ground Water">Ground Water</option>
+                                                <option value="Surface Water">Surface Water</option>
+                                            </select>
                                             <span class="errors text-danger"><?php echo $propertyWaterSource_error; ?></span>
                                         </div>
                                     </div>
@@ -306,7 +458,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="PropertyTotalNumber">Property Total Number</label>
-                                            <input type="text" name="propertyTotalNumber" class="form-control 
+                                            <input type="text" name="propertyTotalNumber" value="<?php echo $propertyTotalNumber; ?>" class="form-control 
                                             <?php echo (!empty($propertyTotalNumber_error)) ? 'is-invalid' : ''; ?>">
                                             <span class="errors text-danger"><?php echo $propertyTotalNumber_error; ?></span>
                                         </div>
@@ -319,6 +471,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <select name="propertyAvailability" class="form-control <?php echo (!empty($propertyAvailability_error)) ? 'is-invalid' : ''; ?>">
                                                 <option value="Select Availability" disabled>Select Property Availability</option>
                                                 <option value="Full">Full</option>
+                                                <option value="Almost Full">Almost Full</option>
                                                 <option value="Empty">Empty</option>
                                             </select>
                                             <span class="errors text-danger"><?php echo $propertyAvailability_error; ?></span>
