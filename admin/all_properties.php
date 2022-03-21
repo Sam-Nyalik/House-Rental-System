@@ -617,6 +617,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="profile_side1">
+                        <div class="title">
+                            <h5><i class="bi bi-building"></i> All Properties</h5>
+                            <hr>
+                        </div>
+
+                        <!-- Prepare a SELECT statement from the all_properties table to fetch all properties -->
+                        <?php
+                        $sql = $pdo->prepare("SELECT * FROM all_properties ORDER BY date_added");
+                        $sql->execute();
+                        $database_all_properties = $sql->fetchAll(PDO::FETCH_ASSOC);
+                        ?>
+                        <?php foreach ($database_all_properties as $all_properties) : ?>
+                            <div class="row">
+                                <div class="category">
+                                    <div class="col-md-6">
+                                        <a href=""><img src="<?= $all_properties['propertyImage1']; ?>" alt="<?= $all_properties['propertyName']; ?>" class="img-fluid propertyCategoryImage"></a>
+                                        <h5 class="text-center propertyCategoryTitle"><?= $all_properties['propertyName']; ?></h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <?php endforeach; ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
