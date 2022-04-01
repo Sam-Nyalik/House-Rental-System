@@ -18,6 +18,7 @@ if (isset($_SESSION['id'])) {
                     <hr>
                     <li><a href="index.php?page=admin/all_properties"><i class="bi bi-building"></i> All properties</a></li>
                     <hr>
+                    <li><a href=""><i class="bi bi-files"></i> All Reports</a></li>
                 </div>
 
                 <div class="nav_buttons" onclick="openNav()">
@@ -89,15 +90,14 @@ if (isset($_SESSION['id'])) {
 
 <script>
     function openNav() {
-    document.getElementById("sideNav").style.width = "250px";
-    document.getElementById("body").style.marginLeft = "250px";
-    document.style.body.backgroundColor = "rgba(0,0,0,0.4)";
-}
+        document.getElementById("sideNav").style.width = "250px";
+        document.getElementById("body").style.marginLeft = "250px";
+        document.style.body.backgroundColor = "rgba(0,0,0,0.4)";
+    }
 
-function closeNav(){
-    document.getElementById("sideNav").style.width = "0";
-    document.getElementById("body").style.marginLeft = "0";
-    document.body.style.backgroundColor = "white";
-}
-
+    function closeNav() {
+        document.getElementById("sideNav").style.width = "0";
+        document.getElementById("body").style.marginLeft = "0";
+        document.body.style.backgroundColor = "white";
+    }
 </script>
