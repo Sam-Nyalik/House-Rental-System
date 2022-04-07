@@ -7,5 +7,5 @@ unset($_session['id']);
 unset($_SESSION['admin_loggedIn']);
 
 // Redirect admin to the login page
-header("location: index.php?page=admin/account/login");
+header("location: index.php?page=home");
 exit;
