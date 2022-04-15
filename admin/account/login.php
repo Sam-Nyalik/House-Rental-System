@@ -103,6 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div id="login">
     <div class="container">
         <div class="row">
+            <div class="back_button">
+                <h6 onclick="history.back()"><i class="bi bi-arrow-left-circle"></i> back</h6>
+            </div>
             <div class="col-md-5">
                 <div class="title">
                     <h5>Admin Sign In</h5>
