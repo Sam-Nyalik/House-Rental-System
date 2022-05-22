@@ -32,11 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql = $pdo->prepare("SELECT password FROM admin WHERE id = '$id'");
         $sql->execute();
         $database_admin = $sql->fetchAll(PDO::FETCH_ASSOC);
-        if (password_verify($currentPassword, $database_admin['password'])) {
+        foreach ($database_admin as $admin_password): {
+              if (password_verify($_POST['currentPassword'], $admin_password['password'])) {
             $currentPassword = trim($_POST['currentPassword']);
         } else {
             $currentPassword_error = "Wrong Password!";
         }
+        }
+    endforeach;
     }
 
     // Validate New Password
