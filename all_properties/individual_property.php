@@ -1,5 +1,8 @@
 <?php
 
+// Start session
+session_start();
+
 // Database Connection
 include_once "functions/functions.php";
 $pdo = databaseConnect();
@@ -53,7 +56,34 @@ if (isset($_GET['id'])) {
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="accountsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <?php 
+                            if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true){
+                                $userId = false;
+                                if(isset($_SESSION['id'])){
+                                    $userId = $_SESSION['id'];
+                                }
+                                // Fetch user details from the database
+                                $sql = $pdo->prepare("SELECT * FROM users WHERE id = $userId");
+                                $sql->execute();
+                                $database_user_details = $sql->fetchAll(PDO::FETCH_ASSOC);
+                                ?>
+                                <?php foreach($database_user_details as $user_details): ?>
+                                      <a class="nav-link dropdown-toggle" href="#" id="accountsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!--Accounts--> <?= $user_details['firstName'] ?> <?=$user_details['lastName'];?>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="accountsDropdown">
+                            <li><a class="dropdown-item" href=""><i class="bi bi-person"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href=""><i class="bi bi-shield-lock"></i> Booked</a></li>
+                            <hr>
+                            <li><a href="index.php?page=user/account/logout" class="dropdown-item"><i class="bi bi-box-arrow-left"></i> Logout</a></li>
+                            <!-- <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                        </ul>
+                                <?php endforeach; ?>
+                            <?php } else { ?>
+                                  <a class="nav-link dropdown-toggle" href="#" id="accountsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Accounts
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="accountsDropdown">
@@ -65,9 +95,10 @@ if (isset($_GET['id'])) {
                             </li>
                             <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                         </ul>
+                    <?php } ?>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">Contact</a>
+                        <a class="nav-link" href="index.php?page=contact">Contact</a>
                     </li>
                 </ul>
                 <!-- <form class="d-flex">
@@ -123,8 +154,20 @@ if (isset($_GET['id'])) {
                         <h6><?= $single_property['propertyCategory']; ?>, <?= $single_property['propertyType']; ?>, <?= $single_property['numberOfRooms']; ?>, <?= $single_property['propertySize']; ?></h6>
                         <p><?=$single_property['description'];?></p>
                         <h4><a href="tel:0705740958">Call Owner</a></h4>
+
+                        <div class="additional_info">
+                            <h5>Real Estate Agent</h5>
+
+                            <img src="<?=$single_property['agent_profileImage'];?>" class="img-responsive img-fluid">
+                           <div class="additional_info_description">
+                                <h5><?=$single_property['agent_prefix'];?> <?=$single_property['agent_name'];?></h5>
+                                <h4><a>Email the agent</a></h4>
+                           </div>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>
