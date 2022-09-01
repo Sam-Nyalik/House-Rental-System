@@ -50,6 +50,33 @@ function header_template($title)
     echo $element;
 }
 
+// Main Footer
+function main_footer()
+{
+    $element = "
+        <div id=\"main-footer\">
+            <div class=\"container-fluid\">
+                <div class=\"row\">
+                    <div class=\"col-md-4\">
+                        <h3>NYALIK REAL ESTATE</h3>
+                        <hr>
+                        <p class=\"description\">&copy;2022 | All Rights Reserved</p>
+                    </div>
+                    <div class=\"col-md-4\">
+                        <h4>PARTNERS</h4>
+                        <hr>
+                    </div>
+                    <div class=\"col-md-4\">
+                        <h4>SPONSORS</h4>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ";
+    echo $element;
+}
+
 // Footer Template
 function footer_template()
 {
